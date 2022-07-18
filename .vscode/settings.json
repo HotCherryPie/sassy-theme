@@ -1,0 +1,9 @@
+{
+  "scss.validate": false,
+  "stylelint.validate": [
+    "scss",
+  ],
+  "cSpell.words": [
+    "stylelint"
+  ],
+}

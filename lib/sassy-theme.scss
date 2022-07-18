@@ -1,0 +1,117 @@
+@use 'sass:meta';
+@use './schema';
+
+$property-name-template: '--{0}' !default;
+
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+  @return $string;
+}
+
+@function property-to-var-name($scope, $name, $path...) {
+  // TODO: add check of structure
+  // @if not map-has-key($structure, $scope, $name) {
+  //   @error "No specified theme value found: #{$scope}/#{$name}"
+  // }
+
+  $v: #{$scope}-#{$name};
+  @if length($path) > 0 {
+    @each $x, $_ in $path {
+      $v: #{$v}-#{$x};
+    }
+  }
+
+  @return str-replace($property-name-template, '{0}', $v);
+}
+
+// $theme-name used only for debug purpose
+@mixin render($theme-name, $schema, $values) {
+  $structure: $schema;
+  // @debug "#{$theme-name}: #{meta.inspect($values)}";
+
+  $isv: schema.validate($schema, $values);
+
+  // TODO: use deep validation
+  // reference:
+  //  https://github.com/vuetifyjs/vuetify/blob/a6c66e5c1a777520283e176dd9930515b52a0270/packages/vuetify/src/styles/tools/_functions.sass#L53
+  // @each $field, $_ in $structure {
+  //   @if not map-get($values, $field) {
+  //     @error "No `#{$field}` provided for theme `#{$theme-name}`!"
+  //   }
+  // }
+
+  $meta: map-get($values, meta);
+  @if $meta != null {
+    @each $meta-key, $_ in map-get($structure, meta) {
+      @if map-has-key($meta, $meta-key) {
+        #{property-to-var-name(meta, $meta-key)}: map-get($meta, $meta-key);
+      } @else {
+        @error 'No meta `#{$meta-key}` provided for theme `#{$theme-name}`!';
+      }
+    }
+  }
+
+  $colors: map-get($values, colors);
+  @if $colors != null {
+    @each $color-name, $_ in map-get($structure, colors) {
+      $provided-color: map-get($colors, $color-name);
+      @if $provided-color {
+        @include _render-color($color-name, $provided-color);
+      } @else {
+        @error 'No color `#{$color-name}` provided for theme `#{$theme-name}`!';
+      }
+    }
+  }
+
+  $typography: map-get($values, typography);
+  @if $typography != null {
+    @each $text-style, $_ in map-get($structure, typography) {
+      $provided-value: map-get($typography, $text-style);
+      @if $provided-value {
+        @each $font-property-name, $font-property-value in $provided-value {
+          #{property-to-var-name(typography, $text-style, $font-property-name)}: $font-property-value;
+        }
+      } @else {
+        @error 'No styles for text `#{$text-style}` provided for theme `#{$theme-name}`!';
+      }
+    }
+  }
+}
+
+@mixin _render-color($color-name, $value) {
+  $prop-name: #{property-to-var-name(colors, $color-name)};
+  #{$prop-name}: $value;
+
+  #{$prop-name + "_RGB"}: _to-rgb-list($value);
+}
+
+@function _to-rgb-list($color) {
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  @return $r, $g, $b;
+}
+
+@function get-color($name, $opacity) {
+  $prop-name: #{property-to-var-name(colors, $name)};
+
+  @if $opacity != 1 {
+    @return #{rgba(var($prop-name + '_RGB'), $opacity)};
+  }
+
+  @return var($prop-name);
+}
+
+
+// https://css-tricks.com/making-sass-talk-to-javascript-with-json/
+// @function map-to-json($map) {
+//   $out: ();
+//   @each $key, $value in list {
+//     $out: append($out, '{ #{$key}: ${value} }', comma);
+//   }
+//   @return '{'+ $out + '}';
+// }

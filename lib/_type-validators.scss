@@ -1,0 +1,52 @@
+@use 'sass:meta';
+@use 'sass:list';
+@use 'sass:math';
+
+// TODO; use $min-len and $max-len
+@function is-string($v, $min-len, $max-len) {
+  @return meta.type-of($v) == 'string';
+}
+
+@function is-number($v, $units) {
+  $units-type: meta.type-of($units);
+  @if $units-type != 'null' and $units-type != 'list' {
+    @error '$units argument presented by $units is not type-of "list"';
+  }
+
+  @if meta.type-of($units) == 'list' {
+    @if list.length($units) == 0 {
+      @return meta.type-of($v) == 'number' and math.is-unitless($v);
+    }
+
+    $unit: math.unit($v);
+    $unit-index: list.index($units, $unit);
+    @return meta.type-of($index) != 'null';
+  }
+
+  @return meta.type-of($v) == 'number';
+}
+
+@function is-in-range($v, $from, $to, $units) {
+  $is-valid-number: is-number($v, $units);
+  @return $is-valid-number and $v >= $from and $v <= $to;
+}
+
+@function is-bool($v) {
+  @return meta.type-of($v) == 'bool';
+}
+
+@function is-one-of($v, $values) {
+  $index: list.index($values, $v);
+  @if meta.type-of($index) == 'null' {
+    @return false;
+  }
+  @return true;
+}
+
+@function is-color($v) {
+  @return meta.type-of($v) == 'color';
+}
+
+@function is-satisfies($v, $validator-function) {
+  @return meta.call($validator-function, $v);
+}

@@ -1,0 +1,35 @@
+.theme.light {
+  --theme_colors-primary: #0095FF;
+  --theme_colors-primary_RGB: 0, 149, 255;
+  --theme_colors-text-1: black;
+  --theme_colors-text-1_RGB: 0, 0, 0;
+  --theme_colors-text-2: rgba(60, 60, 67, 0.6);
+  --theme_colors-text-2_RGB: 60, 60, 67;
+  --theme_colors-text-3: rgba(60, 60, 67, 0.2980392157);
+  --theme_colors-text-3_RGB: 60, 60, 67;
+  --theme_colors-bg-1: #FFFFFF;
+  --theme_colors-bg-1_RGB: 255, 255, 255;
+  --theme_colors-bg-2: #F2F2F7;
+  --theme_colors-bg-2_RGB: 242, 242, 247;
+  --theme_colors-bg-3: #FFFFFF;
+  --theme_colors-bg-3_RGB: 255, 255, 255;
+}
+
+.theme.dark {
+  --theme_colors-primary: #0095FF;
+  --theme_colors-primary_RGB: 0, 149, 255;
+  --theme_colors-text-1: white;
+  --theme_colors-text-1_RGB: 255, 255, 255;
+  --theme_colors-text-2: rgba(235, 235, 245, 0.6);
+  --theme_colors-text-2_RGB: 235, 235, 245;
+  --theme_colors-text-3: rgba(235, 235, 245, 0.2980392157);
+  --theme_colors-text-3_RGB: 235, 235, 245;
+  --theme_colors-bg-1: #000000;
+  --theme_colors-bg-1_RGB: 0, 0, 0;
+  --theme_colors-bg-2: #1C1C1E;
+  --theme_colors-bg-2_RGB: 28, 28, 30;
+  --theme_colors-bg-3: #2C2C2E;
+  --theme_colors-bg-3_RGB: 44, 44, 46;
+}
+
+/*# sourceMappingURL=example.css.map */

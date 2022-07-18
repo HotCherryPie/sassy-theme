@@ -1,0 +1,34 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@function describe($name, $validator, $validator-args: ()) {
+  @return (
+    'name': $name,
+    'validator': $validator,
+    'validator-args': $validator-args,
+  );
+}
+
+@function validate($descriptor, $value) {
+  $name: map.get($descriptor, 'name');
+  $validator: map.get($descriptor, 'validator');
+  $validator-args: map.get($descriptor, 'validator-args');
+
+  $validation-result: meta.call($validator, $value, $validator-args...);
+  $validation-status: map.get($validation-result, 'status');
+  $validation-error: map.get($validation-result, 'error');
+
+  @if $validation-status == false {
+    $v: meta.inspect($value);
+    @error 'Validation of type "#{$name}" with value\n\n#{$v}\n\nfailed with error:\n\t#{$validation-error}';
+  }
+
+  @return $validation-status;
+}
+
+@function validation-result($is-valid, $error-message) {
+  @return (
+    'status': $is-valid,
+    'error': $error-message,
+  );
+}

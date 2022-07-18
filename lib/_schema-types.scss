@@ -1,0 +1,37 @@
+@use 'sass:meta';
+@use './type-validators' as tv;
+@use './schema-type' as t;
+
+@function _tvf($f) {
+  @return meta.get-function($f, false, tv);
+}
+
+$string: t.describe('string', _tvf('is-string'));
+$number: t.describe('number', _tvf('is-number'), (()));
+$bool: t.describe('bool', _tvf('is-bool'));
+$color: t.describe('color', _tvf('is-color'));
+
+// if $units is 'null' - any unit allowed
+@function number-with-units($units) {
+  @return t.describe('number-with-units', _tvf('is-number'), ($units));
+}
+
+@function number-from-range($from, $to) {
+  @return t.describe('number-from-range', _tvf('is-in-range'), ($from, $to, ()));
+}
+
+// if $units is 'null' - any unit allowed
+@function number-with-units-from-range($from, $to, $units) {
+  @return t.describe('number-with-units-from-range', _tvf('is-in-range'), ($from, $to, $units));
+}
+
+@function one-of($values...) {
+  @return t.describe('one-of', _tvf('is-one-of'), ($values));
+}
+
+@function custom($name, $validator) {
+  @if meta.type-of($validator) != 'function' {
+    @error 'The $validator of custom type "#{$name}" should be a function returned by meta.get-function().';
+  }
+  @return t.describe('custom:#{$name}', _tvf('is-one-of'), ($validator));
+}

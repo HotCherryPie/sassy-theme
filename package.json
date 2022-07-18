@@ -1,0 +1,28 @@
+{
+  "name": "sassy-theme",
+  "version": "0.0.1",
+  "description": "SASS based BASED theme toolkit",
+  "license": "MIT",
+  "author": {
+    "name": "Cherry Pie"
+  },
+  "files": [
+    "lib/"
+  ],
+  "keywords": [
+    "sass",
+    "scss",
+    "theme"
+  ],
+  "scripts": {
+    "compile-example": "sass example\\example.scss example\\example.css"
+  },
+  "devDependencies": {
+    "sass": "^1.53.0",
+    "stylelint": "^14.9.1",
+    "stylelint-config-idiomatic-order": "^8.1.0",
+    "stylelint-config-sass-guidelines": "^9.0.1",
+    "stylelint-order": "^5.0.0",
+    "stylelint-scss": "^4.3.0"
+  }
+}

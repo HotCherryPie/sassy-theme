@@ -1,0 +1,46 @@
+@use 'sass:map';
+
+@function _record($is-required, $type) {
+  @return (
+    'required': $is-required,
+    'type': $type,
+  );
+}
+
+@function _validate-record($record, $value) {
+  $type: map.get($record, 'type');
+  $is-required: map.get($record, 'required');
+
+  $is-type-valid: true;
+
+  @return true;
+}
+
+// if $type omitted, then value can be anything
+@function optional($type) {
+  @return _record(false, $type);
+}
+
+// if $type omitted, then value can be anything
+@function required($type) {
+  @return _record(true, $type);
+}
+
+// @function describe($map) {
+//   @return $map
+// }
+
+@function _validate($schema, $data, $property-path) {
+  $is-valid: true;
+
+  // @each $schema-property, $schema-record in $schema {
+  //   $is-record-valid: _validate-record($schema-record);
+  //   $is-valid: $is-valid and $is-record-valid;
+  // }
+
+  @return $is-valid;
+}
+
+@function validate($schema, $data) {
+  @return _validate($schema, $data, ());
+}

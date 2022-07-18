@@ -1,0 +1,46 @@
+@use '../lib/sassy-theme.scss' with (
+  $property-name-template: '--theme_{0}'
+);
+
+@use '../lib/schema' as s;
+@use '../lib/schema-types' as t;
+
+$schema: (
+  colors: (
+    primary: s.required(t.$color),
+    text-1: s.required(t.$color),
+    text-2: s.required(t.$color),
+    text-3: s.required(t.$color),
+    bg-1: s.required(t.$color),
+    bg-2: s.required(t.$color),
+    bg-3: s.required(t.$color),
+  ),
+);
+
+.theme.light {
+  @include sassy-theme.render('Light', $schema, (
+    colors: (
+      primary: #0095FF,
+      text-1: #000000ff,
+      text-2: #3c3c4399,
+      text-3: #3c3c434c,
+      bg-1: #FFFFFF,
+      bg-2: #F2F2F7,
+      bg-3: #FFFFFF,
+    ),
+  ));
+}
+
+.theme.dark {
+  @include sassy-theme.render('Dark', $schema, (
+    colors: (
+      primary: #0095FF,
+      text-1: #ffffffff,
+      text-2: #ebebf599,
+      text-3: #ebebf54c,
+      bg-1: #000000,
+      bg-2: #1C1C1E,
+      bg-3: #2C2C2E,
+    ),
+  ));
+}
